@@ -1,7 +1,6 @@
 import axios from "axios";
 
 const handleError = function(error) {
-  debugger;
   if (error.response) {
     // Request made and server responded
     console.log(error.response.data);
@@ -49,7 +48,6 @@ export const actions = {
       .catch((err) => handleError(err));
   },
   async EDIT_CATEGORY(context, { item, id }) {
-    debugger;
     axios
       .put(`products/category/${id}`, item, {})
       .then((res) =>
@@ -67,8 +65,11 @@ export const actions = {
   },
   async EDIT_PRODUCT(context, { item, id }) {
     axios
-      .put("products", item, {})
-      .then((res) => context.commit("EDIT_CATEGORY", res.data, id))
+      .put(`products/${id}`, item, {})
+      .then((res) => {
+        debugger;
+        context.commit("EDIT_PRODUCT", { product: res.data, id: id });
+      })
       .catch((err) => handleError(err));
   },
 

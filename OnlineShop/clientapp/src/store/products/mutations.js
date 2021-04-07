@@ -15,7 +15,6 @@ export const mutations = {
   },
 
   ADD_PRODUCT(state, product) {
-    debugger;
     state.products = [...state.products, product];
   },
   ADD_CATEGORY(state, category) {
@@ -28,7 +27,7 @@ export const mutations = {
       category,
     ];
   },
-  EDIT_PRODUCT(state, product, id) {
+  EDIT_PRODUCT(state, { product, id }) {
     state.products = [...state.products.filter((p) => p.id != id), product];
   },
 };
