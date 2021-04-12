@@ -1,4 +1,6 @@
 ﻿
+using AutoMapper;
+
 using OnlieShop.Domain.Models.Entities;
 
 using OnlineShop.Models;
@@ -13,7 +15,7 @@ namespace OnlineShop.Services
     public class ProductsService : IProductsService
     {
         ApplicationDbContext _db;
-        public ProductsService(ApplicationDbContext db) {
+        public ProductsService(ApplicationDbContext db, IMapper mapper) {
             _db = db;
         }
         public IEnumerable<Product> GetProducts()

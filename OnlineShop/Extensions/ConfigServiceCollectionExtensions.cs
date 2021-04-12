@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using OnlineShop.Services;
+using OnlineShop.Services.Implementations;
+using OnlineShop.Services.Interfaces;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,7 @@ namespace OnlineShop.Extensions
         public static IServiceCollection AddConfig(this IServiceCollection services, IConfiguration configuration) 
         {
             services.AddTransient<IProductsService, ProductsService>();
+            services.AddTransient<IUsersService, UsersService>();
             return services;
         }
     }

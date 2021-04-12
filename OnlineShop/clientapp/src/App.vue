@@ -35,12 +35,14 @@ export default {
   },
   methods: {
     ...mapActions("products", ["CATEGORIES", "PRODUCTS"]),
+    ...mapActions("users", ["USERS"]),
     login() {},
     async logout() {},
   },
   created() {
     this.CATEGORIES();
     this.PRODUCTS();
+    this.USERS();
   },
 };
 </script>

@@ -80,7 +80,7 @@ namespace OnlineShop.Controllers
                 return BadRequest("Product id not found");
             }
             _productsService.DeleteProduct(id);
-            return Ok(id);
+            return Ok(id); 
         }
     }
 }
