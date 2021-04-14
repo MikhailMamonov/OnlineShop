@@ -21,7 +21,7 @@ namespace OnlineShop.Services.Implementations
             this._userManager = userManager;
         }
 
-        public async Task<List<User>> GetUsers()
+        public async Task<List<User>> GetUsersAsync()
         {
             return await _db.Users.ToListAsync();
         }
@@ -42,17 +42,19 @@ namespace OnlineShop.Services.Implementations
             
         }
 
-        public void UpdateUser(int id, User user)
+        public async Task<bool> UpdateUserAsync(int id, User user)
         {
-            var entity = _db.Users.Find(id);
+            var entity =await _db.Users.FindAsync(id);
             _db.Entry(entity).CurrentValues.SetValues(user);
-            _db.SaveChanges();
+            var updatedRowsCount = _db.SaveChangesAsync();
+            return await updatedRowsCount > 0;
         }
-        public void DeleteUser(string id)
+        public async Task<bool> DeleteUser(string id)
         {
-            var user = _db.Users.Find(id);
+            var user =await _db.Users.FindAsync(id);
             _db.Users.Remove(user);
-            _db.SaveChanges();
+            var deletedRowsCount =await _db.SaveChangesAsync();
+            return deletedRowsCount > 0;
         }
     }
 }

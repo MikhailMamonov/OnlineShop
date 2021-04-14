@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using OnlieShop.Domain.Models.DTO;
@@ -31,7 +31,7 @@ namespace OnlineShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUser([FromForm] UserDTO userDTO)
+        public async Task<IActionResult> AddUser([FromForm] UserDTO userDTO)
         {
             if (userDTO == null)
             {
@@ -46,39 +46,49 @@ namespace OnlineShop.Controllers
             var user = new User
             {
                 DisplayName = userDTO.DisplayName,
-                Email = userDTO.Email
+                Email = userDTO.Email,
+                PasswordHash = userDTO.Password
             };
 
             //var userEntity = _mapper
-             _usersService.AddUserAsync(user);
-            return Ok();
+            if ((await _usersService.AddUserAsync(user)))
+                return Ok(userDTO);
+            else
+                return StatusCode(StatusCodes.Status500InternalServerError,"User creating is Failed");
         }
 
         [HttpGet]
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
-            var users = _usersService.GetUsers();
+            var users = await _usersService.GetUsersAsync();
             var usersDTO = _mapper.Map<List<UserDTO>>(users);
             return Ok(usersDTO);
         }
 
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User user)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
-            _usersService.UpdateUser(id, user);
-            return Ok(user);
+            var result = await _usersService.UpdateUserAsync(id, user);
+            if (!result)
+                return BadRequest("User not updated");
+            else
+                return Ok(user);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(string id)
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            if (!_usersService.GetUsers().Any(user => user.Id == id))
+            var users = await _usersService.GetUsersAsync();
+            if (!users.Any(user => user.Id == id))
             {
                 return BadRequest("User id not found");
             }
-            _usersService.DeleteUser(id);
-            return Ok(id);
+            var result = await _usersService.DeleteUser(id);
+            if (!result)
+                return BadRequest("User not deleted");
+            else
+                return Ok(string.Format("user with id -> {0} succes deleted",id));
         }
     }
 }

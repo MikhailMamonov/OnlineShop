@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using OnlineShop.Common.Mappings;
 using OnlineShop.Services;
 using OnlineShop.Services.Implementations;
 using OnlineShop.Services.Interfaces;
@@ -14,11 +15,23 @@ namespace OnlineShop.Extensions
 {
     public static class ConfigServiceCollectionExtensions
     {
-        public static IServiceCollection AddConfig(this IServiceCollection services, IConfiguration configuration) 
+        public static IServiceCollection AddCustomServices(this IServiceCollection services) 
         {
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<IUsersService, UsersService>();
             return services;
         }
+
+        public static IServiceCollection AddMapper(this IServiceCollection services)
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            return services;
+        }
+
     }
 }

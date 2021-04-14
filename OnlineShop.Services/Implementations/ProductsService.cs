@@ -1,6 +1,6 @@
 ﻿
 using AutoMapper;
-
+using Microsoft.EntityFrameworkCore;
 using OnlieShop.Domain.Models.Entities;
 
 using OnlineShop.Models;
@@ -9,25 +9,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OnlineShop.Services
 {
     public class ProductsService : IProductsService
     {
         ApplicationDbContext _db;
-        public ProductsService(ApplicationDbContext db, IMapper mapper) {
+
+        public ProductsService(ApplicationDbContext db) {
             _db = db;
         }
-        public IEnumerable<Product> GetProducts()
+        public async Task<List<Product>> GetProductsAsync()
         {
-            return _db.Products;
+            return await _db.Products.ToListAsync();
         }
 
-        public IEnumerable<Category> GetCategories() {
-            return _db.Categories;
+        public async Task<List<Category>> GetCategoriesAsync() {
+            return await  _db.Categories.ToListAsync();
         }
 
-        public Product AddProduct(Product product)
+        public async Task<bool> AddProductAsync(Product product)
         {
             if (product.Category == null)
             {
@@ -36,41 +38,46 @@ namespace OnlineShop.Services
             }
 
             _db.Products.Add(product);
-            _db.SaveChanges();
-            return product;
+            int addedRowsCount =await _db.SaveChangesAsync();
+            return addedRowsCount>0;
         }
 
-        public void AddCategory(Category category)
+        public async Task<bool> AddCategoryAsync(Category category)
         {
             _db.Categories.Add(category);
-            _db.SaveChanges();
+            int addedRowsCount = await _db.SaveChangesAsync();
+            return addedRowsCount > 0;
         }
 
-        public void UpdateProduct(int id, Product product) 
+        public async Task<bool> UpdateProductAsync(int id, Product product) 
         {
-            var entity=_db.Products.Find(id);
+            var entity=await _db.Products.FindAsync(id);
             _db.Entry(entity).CurrentValues.SetValues(product);
-            _db.SaveChanges();
+            int updatedRowsCount= await _db.SaveChangesAsync();
+            return updatedRowsCount > 0;
         }
 
-        public void UpdateCategory(int id, Category category)
+        public async Task<bool> UpdateCategoryAsync(int id, Category category)
         {
-            var entity = _db.Categories.Find(id);
+            var entity =await _db.Categories.FindAsync(id);
             _db.Entry(entity).CurrentValues.SetValues(category);
-            _db.SaveChanges();
+            int updatedRowsCount =await _db.SaveChangesAsync();
+            return updatedRowsCount > 0;
         }
 
-        public void DeleteCategory(int id) 
+        public async Task<bool> DeleteCategoryAsync(int id) 
         {
-            var category = _db.Categories.Find(id);
+            var category =await _db.Categories.FindAsync(id);
             _db.Categories.Remove(category);
-            _db.SaveChanges();
+            int deletedRowsCount =await _db.SaveChangesAsync();
+            return deletedRowsCount > 0;
         }
-        public void DeleteProduct(int id) 
+        public async Task<bool> DeleteProductAsync(int id) 
         {
-            var product = _db.Products.Find(id);
+            var product =await _db.Products.FindAsync(id);
             _db.Products.Remove(product);
-            _db.SaveChanges();
+            int deletedRowsCount =await _db.SaveChangesAsync();
+            return deletedRowsCount > 0;
         }
     }
 }

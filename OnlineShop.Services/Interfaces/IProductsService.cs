@@ -3,18 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace OnlineShop.Services
 {
     public interface IProductsService
     {
-        public IEnumerable<Product> GetProducts();
-        public Product AddProduct(Product product);
-        public void AddCategory(Category category);
-        public IEnumerable<Category> GetCategories();
-        public void UpdateProduct(int id, Product product);
-        public void UpdateCategory(int id, Category category);
-        public void DeleteCategory(int id);
-        public void DeleteProduct(int id);
+        public Task<List<Product>> GetProductsAsync();
+        public Task<bool> AddProductAsync(Product product);
+        public Task<bool> AddCategoryAsync(Category category);
+        public Task<List<Category>> GetCategoriesAsync();
+        public Task<bool> UpdateProductAsync(int id, Product product);
+        public Task<bool> UpdateCategoryAsync(int id, Category category);
+        public Task<bool> DeleteCategoryAsync(int id);
+        public Task<bool> DeleteProductAsync(int id);
     }
 }

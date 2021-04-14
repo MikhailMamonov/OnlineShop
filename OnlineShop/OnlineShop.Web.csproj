@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnlieShop.Domain\OnlieShop.Domain.csproj" />
+    <ProjectReference Include="..\OnlineShop.Common\OnlineShop.Common.csproj" />
     <ProjectReference Include="..\OnlineShop.Services\OnlineShop.Services.csproj" />
   </ItemGroup>
 

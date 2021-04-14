@@ -10,9 +10,9 @@ namespace OnlineShop.Services.Interfaces
 {
     public interface IUsersService
     {
-        public Task<List<User>> GetUsers();
+        public Task<List<User>> GetUsersAsync();
         public Task<bool> AddUserAsync(User user);
-        public void UpdateUser(int id, User user);
-        public void DeleteUser(string id);
+        public Task<bool> UpdateUserAsync(int id, User user);
+        public Task<bool> DeleteUser(string id);
     }
 }

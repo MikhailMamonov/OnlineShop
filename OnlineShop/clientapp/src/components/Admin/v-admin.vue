@@ -78,7 +78,7 @@
 
     <b-row>
       <h2>Users</h2>
-      <!-- Product Add -->
+      <!-- User Add -->
       <v-add-list-item :item="user" v-on:add-item="ADD_USER"></v-add-list-item>
 
       <!-- Main Table -->
@@ -140,19 +140,33 @@ export default {
       //   { id: 4, name: "Sarah", role: "admin" },
       // ],
       product: {
-        name: "",
-        price: 0,
+        name: { value: "", type: "text" },
+        price: { value: 0, type: "number" },
       },
       user: {
-        name: "",
-        role: "",
+        displayName: { value: "", type: "text", validation: function(name){return name.length > 0 && name.length < 13 }, errorMessage:"Name must be 0-12 characters long."},
+        email: {
+           value: "",
+            type: "email",
+            validation: function (email) {
+               var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+               return re.test(email);},
+               errorMessage: "Email field must be correct" },
+         password: {
+            value: "", 
+            type: 'password',
+            validation: function(password){
+              var re= /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+              return re.test(password);
+               },
+            errorMessage:"Password must be 6-12 characters long, upper and lower cases and digits."},
       },
       category: {
-        name: "",
+        name: { value: "", type: "text" },
       },
-      productFields: ["name", "price", "categoryId", "actions"],
+      productFields: ["name", "price", "actions"],
       categoryFields: ["name", "actions"],
-      userFields: ["name", "role", "actions"],
+      userFields: ["displayName", "Email", "actions"],
       editCategoryModal: {
         id: "edit-category-modal",
         title: "",
@@ -181,14 +195,13 @@ export default {
     ...mapActions("products", [
       "ADD_PRODUCT",
       "ADD_CATEGORY",
-      "ADD_USER",
       "EDIT_PRODUCT",
       "EDIT_CATEGORY",
-      "EDIT_USER",
       "DELETE_PRODUCT",
       "DELETE_CATEGORY",
-      "DELETE_USER",
+      
     ]),
+    ...mapActions("users",["ADD_USER","EDIT_USER", "DELETE_USER"]),
 
     editProductClickHandler(item, index, button) {
       debugger;
@@ -202,6 +215,7 @@ export default {
       this.editCategoryModal.item = item;
       this.$root.$emit("bv::show::modal", this.editCategoryModal.id, button);
     },
+
     editUserClickHandler(item, index, button) {
       debugger;
       this.editUserModal.title = `modal id: ${this.editUserModal.id}`;

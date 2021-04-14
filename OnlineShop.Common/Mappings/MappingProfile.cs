@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
 
 using OnlieShop.Domain.Models.DTO;
-
+using OnlieShop.Domain.Models.Entities;
 using OnlineShop.Models.Entities;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OnlineShop.Common.Mappings
 {
     public class MappingProfile: Profile
     {
-        CreateMap<User, UserDTO>(); //Map from Developer Object to DeveloperDTO Object
+        public MappingProfile()
+        {
+            CreateMap<User, UserDTO>();
+            CreateMap<Product, ProductDTO>();
+            CreateMap<Category, CategoryDTO>();
+        }
     }
 }

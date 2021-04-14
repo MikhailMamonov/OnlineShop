@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using OnlieShop.Domain.Models.DTO;
 using OnlieShop.Domain.Models.Entities;
 
 using OnlineShop.Services;
@@ -15,71 +16,93 @@ namespace OnlineShop.Controllers
     [Route("[controller]")]
     public class ProductsController : Controller
     {
-        IProductsService _productsService;
-        public ProductsController(IProductsService productsService) 
+        private readonly IProductsService _productsService;
+        private readonly IMapper _mapper;
+        public ProductsController(IProductsService productsService, IMapper mapper) 
         {
             _productsService = productsService;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public IActionResult AddProduct([FromForm] Product product)
+        public async Task<IActionResult> AddProduct([FromForm] ProductDTO productRequest)
         {
-            var result = _productsService.AddProduct(product);
-            return Ok(result);
+            var productEntity = new Product() 
+            { 
+                Name = productRequest.Name,
+                Price = productRequest.Price
+            };
+            await _productsService.AddProductAsync(productEntity);
+            var productResponse = _mapper.Map<ProductDTO>(productEntity);
+            return Ok(productResponse);
         }
         [HttpPost("Category")]
-        public ActionResult AddCategory([FromForm] Category category)
+        public async  Task<IActionResult> AddCategory([FromForm] CategoryDTO categoryRequest)
         {
-            _productsService.AddCategory(category);
-            return Ok(category);
+            var categoryEntity = new Category
+            { 
+                Name = categoryRequest.Name
+            };
+
+            await _productsService.AddCategoryAsync(categoryEntity);
+            var categoryResponse = _mapper.Map<CategoryDTO>(categoryEntity);
+            return Ok(categoryResponse);
         }
 
         [HttpGet]
-        public IActionResult Products() {
-            var products = _productsService.GetProducts();
-            return Ok(products);
+        public async  Task<IActionResult> Products() {
+            var products =await _productsService.GetProductsAsync();
+            var productsResponse = _mapper.Map<List<ProductDTO>>(products);
+            return Ok(productsResponse);
         }
 
-        [HttpGet("Categories")]
-        public IActionResult Categories()
+        [HttpGet("categories")]
+        public async  Task<IActionResult> Categories()
         {
-            var categories = _productsService.GetCategories();
-            return Ok(categories);
+            var categories =await _productsService.GetCategoriesAsync();
+            var categoriesResponse = _mapper.Map<List<CategoryDTO>>(categories);
+            return Ok(categoriesResponse);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateProduct(int id, [FromBody] Product product)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDTO productRequest)
         {
-            _productsService.UpdateProduct(id, product);
-            return Ok(product);
+            var productEntity = _mapper.Map<Product>(productRequest);
+            await _productsService.UpdateProductAsync(id, productEntity);
+
+            return Ok(productRequest);
         }
 
         [HttpPut("Category/{id}")]
-        public IActionResult UpdateCategory(int id, [FromBody] Category category) 
+        public async  Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDTO categoryRequest) 
         {
-            _productsService.UpdateCategory(id, category);
-            return Ok(category);
+            var categoryEntity = _mapper.Map<Category>(categoryRequest);
+            await _productsService.UpdateCategoryAsync(id, categoryEntity);
+            return Ok(categoryRequest);
         }
 
         [HttpDelete("Category/{id}")]
-        public IActionResult DeleteCategory(int id) 
+        public async  Task<IActionResult> DeleteCategory(int id) 
         {
-            if (!_productsService.GetCategories().Any(category => category.Id == id)) 
+            var categories =await _productsService.GetCategoriesAsync();
+            if (!categories.Any(category => category.Id == id)) 
             {
                 return BadRequest("Category id not found");
             }
-            _productsService.DeleteCategory(id);
+            await _productsService.DeleteCategoryAsync(id);
             return Ok(id);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteProduct(int id)
+        public async  Task<IActionResult> DeleteProduct(int id)
         {
-            if (!_productsService.GetProducts().Any(product => product.Id == id))
+            var products =await _productsService.GetProductsAsync();
+            if (!products.Any(product => product.Id == id))
             {
                 return BadRequest("Product id not found");
             }
-            _productsService.DeleteProduct(id);
+
+            await _productsService.DeleteProductAsync(id);
             return Ok(id); 
         }
     }
