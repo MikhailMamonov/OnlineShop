@@ -59,9 +59,19 @@ namespace OnlineShop.Controllers
         [HttpGet("categories")]
         public async  Task<IActionResult> Categories()
         {
-            var categories =await _productsService.GetCategoriesAsync();
-            var categoriesResponse = _mapper.Map<List<CategoryDTO>>(categories);
-            return Ok(categoriesResponse);
+            try
+            {
+                var categories = await _productsService.GetCategoriesAsync();
+                var categoriesResponse = _mapper.Map<List<CategoryDTO>>(categories);
+                return Ok(categoriesResponse);
+            }
+            catch (Exception)
+            {
+
+                throw;
+                
+            }
+            
         }
 
         [HttpPut("{id}")]

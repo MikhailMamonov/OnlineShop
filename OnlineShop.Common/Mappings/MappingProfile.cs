@@ -11,8 +11,8 @@ namespace OnlineShop.Common.Mappings
         public MappingProfile()
         {
             CreateMap<User, UserDTO>();
-            CreateMap<Product, ProductDTO>();
-            CreateMap<Category, CategoryDTO>();
+            CreateMap<Product, ProductDTO>().ForMember(dest => dest.CategoryId, act=> act.MapFrom(src => src.CategoryId)).ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
         }
     }
 }

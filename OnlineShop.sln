@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlieShop.Domain", "OnlieSh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Services", "OnlineShop.Services\OnlineShop.Services.csproj", "{DD9647AA-E851-4518-A794-0D69BB709805}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineShop.Common", "OnlineShop.Common\OnlineShop.Common.csproj", "{BE39AFC8-23F5-498D-85A9-B1C8EC53B3AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineShop.Common", "OnlineShop.Common\OnlineShop.Common.csproj", "{BE39AFC8-23F5-498D-85A9-B1C8EC53B3AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7DF5B373-D29D-4FB1-BFCA-EC50BEE2D4A4}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

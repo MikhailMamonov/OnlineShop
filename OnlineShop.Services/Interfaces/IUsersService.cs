@@ -11,7 +11,7 @@ namespace OnlineShop.Services.Interfaces
     public interface IUsersService
     {
         public Task<List<User>> GetUsersAsync();
-        public Task<bool> AddUserAsync(User user);
+        public Task<string> AddUserAsync(User user);
         public Task<bool> UpdateUserAsync(int id, User user);
         public Task<bool> DeleteUser(string id);
     }

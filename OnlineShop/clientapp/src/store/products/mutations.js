@@ -22,6 +22,8 @@ export const mutations = {
     state.categories = categories;
   },
   EDIT_CATEGORY(state, { category, id }) {
+    const filter = state.categories.filter((c) => id != c.id);
+    console.log(filter);
     state.categories = [
       ...state.categories.filter((c) => id != c.id),
       category,

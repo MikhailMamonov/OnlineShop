@@ -28,7 +28,9 @@ export const actions = {
   async ADD_USER(context, data) {
     axios
       .post("users", data, {})
-      .then((res) => {debugger;context.commit("ADD_USER", res.data)})
+      .then((res) => {
+        context.commit("ADD_USER", res.data);
+      })
       .catch((err) => handleError(err));
   },
   async EDIT_USER(context, { item, id }) {

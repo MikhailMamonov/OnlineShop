@@ -7,6 +7,7 @@ using OnlineShop.Services.Interfaces;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OnlineShop.Services.Implementations
@@ -26,7 +27,7 @@ namespace OnlineShop.Services.Implementations
             return await _db.Users.ToListAsync();
         }
 
-        public async Task<bool> AddUserAsync(User user)
+        public async Task<string> AddUserAsync(User user)
         {
             var result =await _userManager.CreateAsync(user, user.PasswordHash);
             var createdRowCount =await _db.SaveChangesAsync();
@@ -34,10 +35,13 @@ namespace OnlineShop.Services.Implementations
             {
                 var currentUser = await _userManager.FindByNameAsync(user.DisplayName);
                 var roleResult = _userManager.AddToRoleAsync(currentUser, "Admin");
-                return createdRowCount > 0;
+                return string.Empty;
             }
             else {
-                return false;
+                StringBuilder sb = new StringBuilder("Ошибки:");
+                result.Errors.ToList().ForEach(err => sb.AppendLine(err.Description));
+
+                return sb.ToString();
             }
             
         }

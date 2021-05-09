@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlieShop.Domain.Models.DTO;
 using OnlieShop.Domain.Models.Entities;
 
+using OnlineShop.Handling;
 using OnlineShop.Models.Entities;
 using OnlineShop.Services;
 using OnlineShop.Services.Interfaces;
@@ -12,6 +13,7 @@ using OnlineShop.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace OnlineShop.Controllers
@@ -46,15 +48,17 @@ namespace OnlineShop.Controllers
             var user = new User
             {
                 DisplayName = userDTO.DisplayName,
+                UserName = userDTO.DisplayName,
                 Email = userDTO.Email,
                 PasswordHash = userDTO.Password
             };
 
             //var userEntity = _mapper
-            if ((await _usersService.AddUserAsync(user)))
+            string errors = await _usersService.AddUserAsync(user);
+            if (errors==string.Empty)
                 return Ok(userDTO);
             else
-                return StatusCode(StatusCodes.Status500InternalServerError,"User creating is Failed");
+                throw new HttpResponseException(500,errors);
         }
 
         [HttpGet]

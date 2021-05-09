@@ -67,7 +67,6 @@ export const actions = {
     axios
       .put(`products/${id}`, item, {})
       .then((res) => {
-        debugger;
         context.commit("EDIT_PRODUCT", { product: res.data, id: id });
       })
       .catch((err) => handleError(err));
