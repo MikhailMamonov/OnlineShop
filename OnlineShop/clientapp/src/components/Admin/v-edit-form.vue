@@ -2,11 +2,17 @@
   <div>
     <b-form ref="form" @submit.prevent="submit">
       <b-form-group
-        label="Name"
-        label-for="input-name"
-        invalid-feedback="Name is required"
+        v-for="(value, name, index) in item"
+        :key="index"
+        :label="name"
+        :label-for="`input-${name}`"
+        invalid-feedback="{name} is required"
       >
-        <b-form-input id="input-name" v-model="item.name"></b-form-input>
+        <b-form-input
+          :id="`input-${name}`"
+          :v-model="newItem[name]"
+          :value="value"
+        ></b-form-input>
       </b-form-group>
     </b-form>
   </div>
@@ -21,13 +27,14 @@ export default {
     },
   },
   computed: {
-    editedItem() {
+    newItem() {
       return this.item;
     },
   },
   methods: {
     submit() {
-      return this.editedItem;
+      debugger;
+      return this.newItem;
     },
   },
 };
